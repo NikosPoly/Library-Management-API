@@ -1,14 +1,14 @@
 package com.library.libraryapp.service;
 
 import com.library.libraryapp.dto.SectionDTO;
+import com.library.libraryapp.exceptions.ResourceNotFoundException;
 import com.library.libraryapp.model.Section;
 import com.library.libraryapp.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
 
 @Service
 public class SectionService {
@@ -24,8 +24,9 @@ public class SectionService {
         return sectionRepository.findAll();
     }
 
-    public Optional<Section> getSectionById(String id) {
-        return sectionRepository.findById(id);
+    public Section getSectionById(String id) {
+        return sectionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Section with ID " + id + " not found."));
     }
 
     public Section createSection(Section section) {
@@ -42,7 +43,7 @@ public class SectionService {
                     existingSection.setEmployeeIds(updatedSection.getEmployeeIds());
                     return sectionRepository.save(existingSection);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Section with ID " + id + " not found."));
     }
 
     public Section updateSection(String id, SectionDTO patchDTO) {
@@ -67,8 +68,7 @@ public class SectionService {
 
         // If any provided field is invalid, reject the update
         if (!isValid) {
-            System.out.println("One or more fields in the patch are invalid.");
-            return null;
+            throw new IllegalArgumentException("One or more fields in the patch are invalid.");
         }
 
 
@@ -93,7 +93,7 @@ public class SectionService {
 
                     return sectionRepository.save(existingSection);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Section with ID " + id + " not found."));
     }
 
 
@@ -121,7 +121,7 @@ public class SectionService {
         if(sectionRepository.existsById(id)){
             sectionRepository.deleteById(id);
         }else{
-            throw new RuntimeException("Section with ID " + id + " not found.");
+            throw new ResourceNotFoundException("Section with ID " + id + " not found.");
         }
     }
 

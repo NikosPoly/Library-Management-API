@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/customers")
@@ -30,9 +29,7 @@ public class CustomerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable String id) {
-        return customerService.getCustomerById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
     @GetMapping
@@ -42,13 +39,10 @@ public class CustomerController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(
-            @PathVariable String id,
-            @Valid @RequestBody Customer updatedCustomer) {
+    public ResponseEntity<Customer> updateCustomer(@PathVariable String id, @Valid @RequestBody Customer updatedCustomer) {
         Customer customer = customerService.updateCustomer(id, updatedCustomer);
-        return customer != null ? ResponseEntity.ok(customer) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(customer);
     }
-
 
     /*@PatchMapping("/{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable String id, @RequestBody Map<String, Object> updates) {
@@ -61,9 +55,7 @@ public class CustomerController {
     @PatchMapping("/{id}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable String id, @RequestBody CustomerDTO patchDTO) {
         Customer updatedCustomer = customerService.updateCustomer(id, patchDTO);
-        return updatedCustomer != null
-                ? ResponseEntity.ok(updatedCustomer)
-                : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedCustomer);
     }
 
 

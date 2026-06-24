@@ -1,6 +1,7 @@
 package com.library.libraryapp.service;
 
 import com.library.libraryapp.dto.LoanDTO;
+import com.library.libraryapp.exceptions.ResourceNotFoundException;
 import com.library.libraryapp.model.Loan;
 import com.library.libraryapp.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
 
 @Service
 public class LoanService {
@@ -25,8 +25,9 @@ public class LoanService {
         return loanRepository.findAll();
     }
 
-    public Optional<Loan> getLoanById(String id) {
-        return loanRepository.findById(id);
+    public Loan getLoanById(String id) {
+        return loanRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Loan with ID " + id + " not found."));
     }
 
     public Loan createLoan(Loan loan) {
@@ -48,7 +49,7 @@ public class LoanService {
                     existingLoan.setReturned(updatedLoan.isReturned());
                     return loanRepository.save(existingLoan);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Loan with ID " + id + " not found."));
     }
 
     public Loan updateLoan(String id, LoanDTO patchDTO) {
@@ -68,8 +69,7 @@ public class LoanService {
         // But if you want to validate something, you can add a check here.
 
         if (!isValid) {
-            System.out.println("One or more fields in the patch are invalid.");
-            return null;
+            throw new IllegalArgumentException("One or more fields in the patch are invalid.");
         }
 
         return loanRepository.findById(id)
@@ -100,7 +100,7 @@ public class LoanService {
 
                     return loanRepository.save(existingLoan);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Loan with ID " + id + " not found."));
     }
 
 
@@ -134,7 +134,7 @@ public class LoanService {
         if (loanRepository.existsById(id)) {
             loanRepository.deleteById(id);
         } else {
-            throw new RuntimeException("Loan with ID " + id + " not found.");
+            throw new ResourceNotFoundException("Loan with ID " + id + " not found.");
         }
     }
 

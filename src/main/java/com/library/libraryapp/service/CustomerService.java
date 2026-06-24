@@ -1,13 +1,13 @@
 package com.library.libraryapp.service;
 
 import com.library.libraryapp.dto.user.CustomerDTO;
+import com.library.libraryapp.exceptions.ResourceNotFoundException;
 import com.library.libraryapp.model.user.Customer;
 import com.library.libraryapp.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -23,8 +23,9 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public Optional<Customer> getCustomerById(String id) {
-        return customerRepository.findById(id);
+    public Customer getCustomerById(String id) {
+        return customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with ID " + id + " not found."));
     }
 
     public Customer createCustomer(Customer customer) {
@@ -43,7 +44,7 @@ public class CustomerService {
                     // add more fields if you have
                     return customerRepository.save(existingCustomer);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with ID " + id + " not found."));
     }
 
     public Customer updateCustomer(String id, CustomerDTO patchDTO) {
@@ -75,8 +76,7 @@ public class CustomerService {
         }
 
         if (!isValid) {
-            System.out.println("One or more fields in the patch are invalid.");
-            return null;
+            throw new IllegalArgumentException("One or more fields in the patch are invalid.");
         }
 
         return customerRepository.findById(id)
@@ -107,7 +107,7 @@ public class CustomerService {
 
                     return customerRepository.save(existingCustomer);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with ID " + id + " not found."));
     }
 
 
@@ -137,7 +137,7 @@ public class CustomerService {
         if(customerRepository.existsById(id)){
             customerRepository.deleteById(id);
         }else{
-            throw new RuntimeException("Customer with ID " + id + " not found.");
+            throw new ResourceNotFoundException("Customer with ID " + id + " not found.");
         }
 
     }

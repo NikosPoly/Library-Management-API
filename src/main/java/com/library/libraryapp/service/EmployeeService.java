@@ -1,6 +1,7 @@
 package com.library.libraryapp.service;
 
 import com.library.libraryapp.dto.user.EmployeeDTO;
+import com.library.libraryapp.exceptions.ResourceNotFoundException;
 import com.library.libraryapp.model.user.Employee;
 import com.library.libraryapp.model.user.Role;
 import com.library.libraryapp.repository.EmployeeRepository;
@@ -8,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -25,8 +24,9 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Optional<Employee> getEmployeeById(String id) {
-        return employeeRepository.findById(id);
+    public Employee getEmployeeById(String id) {
+        return employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee with ID " + id + " not found."));
     }
 
     public Employee createEmployee(Employee employee) {
@@ -44,7 +44,7 @@ public class EmployeeService {
                     // add other fields if you have
                     return employeeRepository.save(existingEmployee);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Employee with ID " + id + " not found."));
     }
 
     public Employee updateEmployee(String id, EmployeeDTO patchDTO) {
@@ -69,8 +69,7 @@ public class EmployeeService {
         // No need to validate `role`, since invalid enums will fail during request parsing
 
         if (!isValid) {
-            System.out.println("Invalid patch data: one or more fields are malformed.");
-            return null;
+            throw new IllegalArgumentException("Invalid patch data: one or more fields are malformed.");
         }
 
         return employeeRepository.findById(id)
@@ -97,7 +96,7 @@ public class EmployeeService {
 
                     return employeeRepository.save(existingEmployee);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new ResourceNotFoundException("Employee with ID " + id + " not found."));
     }
 
 
@@ -126,7 +125,7 @@ public class EmployeeService {
         if(employeeRepository.existsById(id)) {
             employeeRepository.deleteById(id);
         }else{
-            throw new RuntimeException("Employee with ID " + id + " not found.");
+            throw new ResourceNotFoundException("Employee with ID " + id + " not found.");
         }
     }
 }

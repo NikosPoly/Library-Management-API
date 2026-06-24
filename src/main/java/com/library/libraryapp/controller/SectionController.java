@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/sections")
@@ -32,9 +31,7 @@ public class SectionController {
     // Get Section by ID
     @GetMapping("/{id}")
     public ResponseEntity<Section> getSectionById(@PathVariable String id) {
-        return sectionService.getSectionById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(sectionService.getSectionById(id));
     }
 
     // Get all Sections
@@ -47,7 +44,7 @@ public class SectionController {
     @PutMapping("/{id}")
     public ResponseEntity<Section> updateSection(@PathVariable String id, @Valid @RequestBody Section updatedSection) {
         Section section = sectionService.updateSection(id, updatedSection);
-        return section != null ? ResponseEntity.ok(section) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(section);
     }
 
     /*@PatchMapping("/{id}")
@@ -59,7 +56,7 @@ public class SectionController {
     @PatchMapping("/{id}")
     public ResponseEntity<Section> updateSection(@PathVariable String id, @RequestBody SectionDTO patchDTO) {
         Section updatedSection = sectionService.updateSection(id, patchDTO);
-        return updatedSection != null ? ResponseEntity.ok(updatedSection) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedSection);
     }
 
 

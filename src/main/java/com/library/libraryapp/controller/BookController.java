@@ -2,7 +2,6 @@ package com.library.libraryapp.controller;
 
 import com.library.libraryapp.dto.book.BookDTO;
 import com.library.libraryapp.model.book.Book;
-import com.library.libraryapp.model.user.Customer;
 import com.library.libraryapp.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/books")
@@ -33,9 +31,7 @@ public class BookController {
     // Get a book by ID
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable String id) {
-        return bookService.getBookById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(bookService.getBookById(id));
     }
 
     // Get all books
@@ -49,9 +45,6 @@ public class BookController {
     @PutMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable String id, @Valid @RequestBody Book updatedBook) {
         Book book = bookService.updateBook(id, updatedBook);
-        if (book == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(book);
     }
 
@@ -64,7 +57,7 @@ public class BookController {
     @PatchMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable String id,  @RequestBody BookDTO patchDTO) {
         Book book = bookService.updateBook(id, patchDTO);
-        return book != null ? ResponseEntity.ok(book) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(book);
     }
 
 

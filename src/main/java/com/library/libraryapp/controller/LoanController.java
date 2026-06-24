@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/loans")
@@ -32,11 +31,8 @@ public class LoanController {
     // Get a loan by ID
     @GetMapping("/{id}")
     public ResponseEntity<Loan> getLoanById(@PathVariable String id) {
-        return loanService.getLoanById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(loanService.getLoanById(id));
     }
-
 
     // Get all loans
     @GetMapping
@@ -48,7 +44,7 @@ public class LoanController {
     @PutMapping("/{id}")
     public ResponseEntity<Loan> updateLoan(@PathVariable String id, @Valid  @RequestBody Loan updatedLoan) {
         Loan loan = loanService.updateLoan(id, updatedLoan);
-        return loan != null ? ResponseEntity.ok(loan) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(loan);
     }
 
     /*@PatchMapping("/{id}")
@@ -62,9 +58,7 @@ public class LoanController {
     @PatchMapping("/{id}")
     public ResponseEntity<Loan> updateLoan(@PathVariable String id, @RequestBody LoanDTO patchDTO) {
         Loan updated = loanService.updateLoan(id, patchDTO);
-        return updated != null
-                ? ResponseEntity.ok(updated)
-                : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updated);
     }
 
 

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/employees")
@@ -30,9 +29,7 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable String id) {
-        return employeeService.getEmployeeById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
     @GetMapping
@@ -43,7 +40,7 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable String id, @Valid @RequestBody Employee updatedEmployee) {
         Employee employee = employeeService.updateEmployee(id, updatedEmployee);
-        return employee != null ? ResponseEntity.ok(employee) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(employee);
     }
 
     /*@PatchMapping("/{id}")
@@ -57,9 +54,7 @@ public class EmployeeController {
     @PatchMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable String id,@RequestBody EmployeeDTO patchDTO) {
         Employee updatedEmployee = employeeService.updateEmployee(id, patchDTO);
-        return updatedEmployee != null
-                ? ResponseEntity.ok(updatedEmployee)
-                : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedEmployee);
     }
 
 

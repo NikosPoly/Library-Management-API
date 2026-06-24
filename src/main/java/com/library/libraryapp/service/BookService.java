@@ -1,9 +1,11 @@
 package com.library.libraryapp.service;
 
+
 import com.library.libraryapp.dto.book.BookDTO;
 import com.library.libraryapp.dto.book.HistoryBookDTO;
 import com.library.libraryapp.dto.book.LiteratureBookDTO;
 import com.library.libraryapp.dto.book.ScienceBookDTO;
+import com.library.libraryapp.exceptions.ResourceNotFoundException;
 import com.library.libraryapp.model.book.Book;
 import com.library.libraryapp.model.book.HistoryBook;
 import com.library.libraryapp.model.book.LiteratureBook;
@@ -13,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class BookService {
@@ -30,8 +30,9 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Optional<Book> getBookById(String id) {
-        return bookRepository.findById(id);
+    public Book getBookById(String id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with ID " + id + " not found."));
     }
 
     public Book createBook(Book book) {
@@ -71,7 +72,7 @@ public class BookService {
 
                     return bookRepository.save(existingBook);
                 })
-                .orElseThrow(() -> new RuntimeException("Book with ID " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Book with ID " + id + " not found."));
 
     }
 
@@ -124,8 +125,7 @@ public class BookService {
         }
 
         if (!isValid) {
-            System.out.println("One or more fields in the patch are invalid.");
-            return null;
+            throw new IllegalArgumentException("One or more fields in the patch are invalid.");
         }
 
         // Apply updates only after validation passes
@@ -178,7 +178,7 @@ public class BookService {
 
                     return bookRepository.save(existingBook);
                 })
-                .orElseThrow(() -> new RuntimeException("Book with ID " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Book with ID " + id + " not found."));
     }
 
 
@@ -257,7 +257,7 @@ public class BookService {
         if(bookRepository.existsById(id)){
             bookRepository.deleteById(id);
         }else{
-            throw new RuntimeException("Book with ID " + id + " not found.");
+            throw new ResourceNotFoundException("Book with ID " + id + " not found.");
         }
     }
 }
