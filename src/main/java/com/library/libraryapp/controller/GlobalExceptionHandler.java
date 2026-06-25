@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -18,8 +19,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
 
+        List<String> priority = List.of("NotBlank", "NotNull", "NotEmpty");
+
         ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errors.put(error.getField(), error.getDefaultMessage());
+            String annotation = error.getCode();
+            if (!errors.containsKey(error.getField()) || priority.contains(annotation)) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
         });
 
         return ResponseEntity.badRequest().body(errors);

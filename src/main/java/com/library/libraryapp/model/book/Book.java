@@ -35,8 +35,8 @@ public abstract class Book {
     @NotBlank(message = "Author name is required")
     private String author;
 
-    @Min(value = 1000, message = "Publication year must be a valid year")
-    @Max(value = 2100, message = "Publication year must be a valid year")
+    @Min(value = 1000, message = "Publication year must be between 1000 and 2100")
+    @Max(value = 2100, message = "Publication year must be between 1000 and 2100")
     private int publicationYear;
 
     @NotBlank(message = "ISBN is required")
