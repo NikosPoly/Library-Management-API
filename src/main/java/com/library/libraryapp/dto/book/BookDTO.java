@@ -24,17 +24,19 @@ public abstract class BookDTO {
     private String title;
     private String author;
     private Integer publicationYear;
+    private Integer totalCopies;
+    private Integer availableCopies;
     private String isbn;
-    private Boolean available = true;
+    //private Boolean available = true;
 
     public BookDTO() {}
 
-    public BookDTO(String title, String author, int publicationYear, String isbn, Boolean available) {
+    public BookDTO(String title, String author, int publicationYear, Integer totalCopies ,String isbn) {
         this.title = title;
         this.author = author;
         this.publicationYear = publicationYear;
+        this.totalCopies = totalCopies;
         this.isbn = isbn;
-        this.available = available;
     }
 
     // Getters and setters
@@ -47,9 +49,13 @@ public abstract class BookDTO {
     public Integer getPublicationYear() { return publicationYear; }
     public void setPublicationYear(int publicationYear) { this.publicationYear = publicationYear; }
 
+    public Integer getTotalCopies() { return totalCopies; }
+    public void setTotalCopies(Integer totalCopies) { this.totalCopies = totalCopies; }
+
+    public Integer getAvailableCopies() { return availableCopies; }
+    public void setAvailableCopies(Integer availableCopies) { this.availableCopies = availableCopies; }
+
     public String getIsbn() { return isbn; }
     public void setIsbn(String isbn) { this.isbn = isbn; }
 
-    public Boolean isAvailable() { return available; }
-    public void setAvailable(Boolean available) { this.available = available; }
 }

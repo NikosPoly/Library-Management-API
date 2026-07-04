@@ -3,6 +3,7 @@ package com.library.libraryapp.service;
 import com.library.libraryapp.dto.LoanDTO;
 import com.library.libraryapp.exceptions.ResourceNotFoundException;
 import com.library.libraryapp.model.Loan;
+import com.library.libraryapp.model.book.Book;
 import com.library.libraryapp.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,15 +11,16 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-
 @Service
 public class LoanService {
 
     private final LoanRepository loanRepository;
+    private final BookService bookService;
 
     @Autowired
-    public LoanService(LoanRepository loanRepository) {
+    public LoanService(LoanRepository loanRepository, BookService bookService) {
         this.loanRepository = loanRepository;
+        this.bookService = bookService;
     }
 
     public List<Loan> getAllLoans() {
@@ -31,10 +33,18 @@ public class LoanService {
     }
 
     public Loan createLoan(Loan loan) {
-        System.out.println("Created Loan " + loan);
+        Book book = bookService.getBookById(loan.getBookId());
+
+        if (book.getAvailableCopies() == 0) {
+            throw new IllegalStateException("No available copies for book with ID " + loan.getBookId());
+        }
+
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
+        book.syncAvailable();
+        bookService.saveBook(book);
+
         return loanRepository.save(loan);
     }
-
 
     public Loan updateLoan(String id, Loan updatedLoan) {
         return loanRepository.findById(id)
@@ -45,7 +55,14 @@ public class LoanService {
                     existingLoan.setCustomerId(updatedLoan.getCustomerId());
                     existingLoan.setLoanDate(updatedLoan.getLoanDate());
                     existingLoan.setDueDate(updatedLoan.getDueDate());
-                    existingLoan.setReturnDate(updatedLoan.getReturnDate());
+
+                    if (!existingLoan.isReturned() && updatedLoan.isReturned()) {
+                        Book book = bookService.getBookById(existingLoan.getBookId());
+                        book.setAvailableCopies(book.getAvailableCopies() + 1);
+                        book.syncAvailable();
+                        bookService.saveBook(book);
+                        existingLoan.setReturnDate(LocalDate.now());
+                    }
                     existingLoan.setReturned(updatedLoan.isReturned());
                     return loanRepository.save(existingLoan);
                 })
@@ -90,14 +107,16 @@ public class LoanService {
                         existingLoan.setDueDate(patchDTO.getDueDate());
                     }
 
-                    if (patchDTO.getReturnDate() != null) {
-                        existingLoan.setReturnDate(patchDTO.getReturnDate());
-                    }
-
                     if (patchDTO.isReturned() != null) {
+                        if (!existingLoan.isReturned() && patchDTO.isReturned()) {
+                            Book book = bookService.getBookById(existingLoan.getBookId());
+                            book.setAvailableCopies(book.getAvailableCopies() + 1);
+                            book.syncAvailable();
+                            bookService.saveBook(book);
+                            existingLoan.setReturnDate(LocalDate.now());
+                        }
                         existingLoan.setReturned(patchDTO.isReturned());
                     }
-
                     return loanRepository.save(existingLoan);
                 })
                 .orElseThrow(() -> new ResourceNotFoundException("Loan with ID " + id + " not found."));
@@ -130,12 +149,22 @@ public class LoanService {
 
 
 
-    public void deleteLoan(String id) {
+    /*public void deleteLoan(String id) {
         if (loanRepository.existsById(id)) {
             loanRepository.deleteById(id);
         } else {
             throw new ResourceNotFoundException("Loan with ID " + id + " not found.");
         }
+    }*/
+    public void deleteLoan(String id) {
+        Loan loan = loanRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Loan with ID " + id + " not found."));
+
+        if (!loan.isReturned()) {
+            throw new IllegalStateException("Cannot delete loan with ID " + id + " — book has not been returned yet.");
+        }
+
+        loanRepository.deleteById(id);
     }
 
 }

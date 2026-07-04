@@ -9,9 +9,9 @@ public class HistoryBookDTO extends BookDTO {
 
     public HistoryBookDTO() {}
 
-    public HistoryBookDTO(String title, String author, int publicationYear, String isbn, boolean available,
+    public HistoryBookDTO(String title, String author, int publicationYear, int totalCopies, String isbn,
                           String historicalPeriod, String regionFocus) {
-        super(title, author, publicationYear, isbn, available);
+        super(title, author, publicationYear, totalCopies, isbn);
         this.historicalPeriod = historicalPeriod;
         this.regionFocus = regionFocus;
     }

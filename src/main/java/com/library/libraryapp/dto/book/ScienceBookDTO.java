@@ -11,9 +11,9 @@ public class ScienceBookDTO extends BookDTO {
 
     public ScienceBookDTO() {}
 
-    public ScienceBookDTO(String title, String author, int publicationYear, String isbn, Boolean available,
+    public ScienceBookDTO(String title, String author, int publicationYear, int totalCopies, String isbn,
                           String fieldOfStudy, boolean isTextbook, int editionNumber) {
-        super(title, author, publicationYear, isbn, available);
+        super(title, author, publicationYear, totalCopies, isbn);
         this.fieldOfStudy = fieldOfStudy;
         this.isTextbook = isTextbook;
         this.editionNumber = editionNumber;

@@ -1,6 +1,5 @@
 package com.library.libraryapp.service;
 
-
 import com.library.libraryapp.dto.book.BookDTO;
 import com.library.libraryapp.dto.book.HistoryBookDTO;
 import com.library.libraryapp.dto.book.LiteratureBookDTO;
@@ -36,6 +35,12 @@ public class BookService {
     }
 
     public Book createBook(Book book) {
+        book.setAvailableCopies(book.getTotalCopies());
+        book.syncAvailable();
+        return bookRepository.save(book);
+    }
+
+    public Book saveBook(Book book) {
         return bookRepository.save(book);
     }
 
@@ -48,7 +53,15 @@ public class BookService {
                     existingBook.setAuthor(updatedBook.getAuthor());
                     existingBook.setPublicationYear(updatedBook.getPublicationYear());
                     existingBook.setIsbn(updatedBook.getIsbn());
-                    existingBook.setAvailable(updatedBook.isAvailable());
+
+                    int copiesOnLoan = existingBook.getTotalCopies() - existingBook.getAvailableCopies();
+                    if (updatedBook.getTotalCopies() < copiesOnLoan) {
+                        throw new IllegalStateException("Cannot set totalCopies to " + updatedBook.getTotalCopies() +
+                                " — " + copiesOnLoan + " copies are currently on loan.");
+                    }
+                    existingBook.setTotalCopies(updatedBook.getTotalCopies());
+                    existingBook.setAvailableCopies(updatedBook.getTotalCopies() - copiesOnLoan);
+                    existingBook.syncAvailable();
 
                     // Update HistoryBook specific fields
                     if (existingBook instanceof HistoryBook existingHistory && updatedBook instanceof HistoryBook updatedHistory) {
@@ -96,7 +109,12 @@ public class BookService {
             isValid = false;
         }
 
-        // No validation for isAvailable since it's Boolean (nullable)
+        if (patchDTO.getTotalCopies() != null && patchDTO.getTotalCopies() < 1) {
+            isValid = false;
+        }
+        if (patchDTO.getAvailableCopies() != null && patchDTO.getAvailableCopies() < 0) {
+            isValid = false;
+        }
 
         // Subtype validation
         if (patchDTO instanceof HistoryBookDTO historyDTO) {
@@ -143,9 +161,17 @@ public class BookService {
                     if (patchDTO.getIsbn() != null) {
                         existingBook.setIsbn(patchDTO.getIsbn());
                     }
-                    if (patchDTO.isAvailable() != null) {
-                        existingBook.setAvailable(patchDTO.isAvailable());
+
+                    if (patchDTO.getTotalCopies() != null) {
+                        int copiesOnLoan = existingBook.getTotalCopies() - existingBook.getAvailableCopies();
+                        if (patchDTO.getTotalCopies() < copiesOnLoan) {
+                            throw new IllegalStateException("Cannot set totalCopies to " + patchDTO.getTotalCopies() +
+                                    " — " + copiesOnLoan + " copies are currently on loan.");
+                        }
+                        existingBook.setTotalCopies(patchDTO.getTotalCopies());
+                        existingBook.setAvailableCopies(patchDTO.getTotalCopies() - copiesOnLoan);
                     }
+                    existingBook.syncAvailable();
 
                     if (existingBook instanceof HistoryBook historyBook && patchDTO instanceof HistoryBookDTO historyDTO) {
                         if (historyDTO.getHistoricalPeriod() != null) {

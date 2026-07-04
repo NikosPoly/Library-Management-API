@@ -25,9 +25,9 @@ public class ScienceBook extends Book {
         super();
     }
 
-    public ScienceBook(String title, String author, int publicationYear, String isbn,
+    public ScienceBook(String title, String author, int publicationYear, int totalCopies, String isbn,
                        String fieldOfStudy, boolean isTextbook, int editionNumber) {
-        super(title, author, publicationYear, isbn);
+        super(title, author, publicationYear, totalCopies, isbn);
         this.fieldOfStudy = fieldOfStudy;
         this.isTextbook = isTextbook;
         this.editionNumber = editionNumber;

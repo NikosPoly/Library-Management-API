@@ -27,9 +27,9 @@ public class HistoryBook extends Book {
         return "History";
     }
 
-    public HistoryBook(String title, String author, int publicationYear, String isbn,
+    public HistoryBook(String title, String author, int publicationYear, String isbn, int totalCopies,
                        String historicalPeriod, String regionFocus) {
-        super(title, author, publicationYear, isbn);
+        super(title, author, publicationYear, totalCopies, isbn);
         this.historicalPeriod = historicalPeriod;
         this.regionFocus = regionFocus;
     }

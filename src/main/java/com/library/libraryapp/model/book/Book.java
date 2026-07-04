@@ -39,25 +39,31 @@ public abstract class Book {
     @Max(value = 2100, message = "Publication year must be between 1000 and 2100")
     private int publicationYear;
 
+    @Min(value = 1, message = "Total copies must be at least 1")
+    private int totalCopies;
+
+    @Min(value = 0, message = "Available copies cannot be negative")
+    private int availableCopies;
+
     @NotBlank(message = "ISBN is required")
     @Pattern(regexp = "^(97(8|9))?\\d{9}(\\d|X)$", message = "Invalid ISBN format")
     private String isbn;
 
     private boolean available;
 
-    public Book() {
-        this.available = true; // Default: book is available
-    }
+    public Book() {}
 
-    public Book(String title, String author, int publicationYear, String isbn) {
+    public Book(String title, String author, int publicationYear, int totalCopies, String isbn) {
         this.title = title;
         this.author = author;
         this.publicationYear = publicationYear;
         this.isbn = isbn;
-        this.available = true;
+        this.totalCopies = totalCopies;
     }
 
-    // Getters and setters
+    public void syncAvailable() {
+        this.available = this.availableCopies > 0;
+    }
 
     public String getId() {
         return id;
@@ -87,6 +93,22 @@ public abstract class Book {
         this.publicationYear = publicationYear;
     }
 
+    public int getTotalCopies() {
+        return totalCopies;
+    }
+
+    public void setTotalCopies(int totalCopies) {
+        this.totalCopies = totalCopies;
+    }
+
+    public int getAvailableCopies() {
+        return availableCopies;
+    }
+
+    public void setAvailableCopies(int availableCopies) {
+        this.availableCopies = availableCopies;
+    }
+
     public String getIsbn() {
         return isbn;
     }
@@ -97,10 +119,6 @@ public abstract class Book {
 
     public boolean isAvailable() {
         return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
     }
 
     // Abstract method: subclasses must implement

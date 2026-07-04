@@ -22,9 +22,9 @@ public class LiteratureBook extends Book {
         super();
     }
 
-    public LiteratureBook(String title, String author, int publicationYear, String isbn,
+    public LiteratureBook(String title, String author, int publicationYear, int totalCopies, String isbn,
                           String genre, boolean forKids, String targetAudience) {
-        super(title, author, publicationYear, isbn);
+        super(title, author, publicationYear, totalCopies,isbn);
         this.genre = genre;
         this.forKids = forKids;
         this.targetAudience = targetAudience;

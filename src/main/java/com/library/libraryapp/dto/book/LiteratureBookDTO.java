@@ -10,9 +10,9 @@ public class LiteratureBookDTO extends BookDTO {
 
     public LiteratureBookDTO() {}
 
-    public LiteratureBookDTO(String title, String author, int publicationYear, String isbn, Boolean available,
-                             String genre, boolean forKids, String targetAudience) {
-        super(title, author, publicationYear, isbn, available);
+    public LiteratureBookDTO(String title, String author, int publicationYear, int totalCopies,
+                             String isbn, String genre, boolean forKids, String targetAudience) {
+        super(title, author, publicationYear, totalCopies, isbn);
         this.genre = genre;
         this.forKids = forKids;
         this.targetAudience = targetAudience;
