@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, String>> handleDeserializationErrors(HttpMessageNotReadableException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", "Invalid request body. Check that 'type' field is included and valid.");
+        error.put("error", "Invalid request body. Please check the field values and format.");
         return ResponseEntity.badRequest().body(error);
     }
 

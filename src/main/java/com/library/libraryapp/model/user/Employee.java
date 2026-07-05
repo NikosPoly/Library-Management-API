@@ -2,12 +2,16 @@ package com.library.libraryapp.model.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "employees")
 public class Employee extends User {
 
     @NotBlank(message = "Employee ID is required")
+    @Pattern(regexp = "EMP\\d{4}", message = "Employee ID must be in format EMP0001")
+    @Indexed(unique = true)
     private String employeeId;
     @NotBlank(message = "Section is required")
     private String section;

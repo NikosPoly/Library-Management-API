@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 
 public abstract class User {
@@ -16,6 +17,7 @@ public abstract class User {
     private String name;
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
+    @Indexed(unique = true)
     private String email;
 
     // Constructors

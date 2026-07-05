@@ -63,9 +63,10 @@ public class CustomerService {
             isValid = false;
         }
 
-        if (patchDTO.getGender() != null && patchDTO.getGender().isBlank()) {
+        /*if (patchDTO.getGender() != null && patchDTO.getGender().isBlank()) {
             isValid = false;
-        }
+        }*/
+        // No need to validate `gender`, since invalid enums will fail during request parsing
 
         if (patchDTO.getPhoneNumber() != null && !patchDTO.getPhoneNumber().matches("\\d{10}")) {
             isValid = false;

@@ -1,5 +1,6 @@
 package com.library.libraryapp.dto.user;
 
+import com.library.libraryapp.model.user.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -9,7 +10,7 @@ public class CustomerDTO extends UserDTO {
 
 
     private String customerId;
-    private String gender;
+    private Gender gender;
     private String phoneNumber;
     private String address;
 
@@ -17,7 +18,7 @@ public class CustomerDTO extends UserDTO {
         super();
     }
 
-    public CustomerDTO(String name, String email, String customerId, String gender, String phoneNumber, String address) {
+    public CustomerDTO(String name, String email, String customerId, Gender gender, String phoneNumber, String address) {
         super(name, email);
         this.customerId = customerId;
         this.gender = gender;
@@ -34,10 +35,10 @@ public class CustomerDTO extends UserDTO {
         this.customerId = customerId;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
