@@ -2,21 +2,27 @@ package com.library.libraryapp.service;
 
 import com.library.libraryapp.dto.user.CustomerDTO;
 import com.library.libraryapp.exceptions.ResourceNotFoundException;
+import com.library.libraryapp.model.user.Address;
 import com.library.libraryapp.model.user.Customer;
 import com.library.libraryapp.repository.CustomerRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final Validator validator;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, Validator validator) {
         this.customerRepository = customerRepository;
+        this.validator = validator;
     }
 
     public List<Customer> getAllCustomers() {
@@ -72,8 +78,11 @@ public class CustomerService {
             isValid = false;
         }
 
-        if (patchDTO.getAddress() != null && patchDTO.getAddress().isBlank()) {
-            isValid = false;
+        if (patchDTO.getAddress() != null) {
+            Set<ConstraintViolation<Address>> violations = validator.validate(patchDTO.getAddress());
+            if (!violations.isEmpty()) {
+                isValid = false;
+            }
         }
 
         if (!isValid) {

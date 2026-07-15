@@ -1,5 +1,6 @@
 package com.library.libraryapp.model.user;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -18,14 +19,16 @@ public class Customer extends User {
     @NotBlank(message = "Phone is required")
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phoneNumber;
-    @NotBlank(message = "Address is required")
-    private String address;
+
+    @NotNull(message = "Address cannot be null")
+    @Valid
+    private Address address;
 
     public Customer() {
         super();
     }
 
-    public Customer(String name, String email,String customerId, Gender gender, String phoneNumber, String address) {
+    public Customer(String name, String email,String customerId, Gender gender, String phoneNumber, Address address) {
 
         super(name, email);  // Assuming User has (name, email) constructor
         this.customerId = customerId;
@@ -61,11 +64,11 @@ public class Customer extends User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 }
