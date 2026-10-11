@@ -4,8 +4,8 @@ A RESTful Library Management API built with Java Spring Boot and MongoDB, featur
 
 ## Tech Stack
 
-- Java 17
-- Spring Boot 3.5.3
+- Java 25
+- Spring Boot 4.1.1
 - MongoDB
 - Maven
 
