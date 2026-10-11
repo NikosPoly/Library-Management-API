@@ -1,5 +1,6 @@
 package com.library.libraryapp.dto.book;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.NotBlank;
 
 public class HistoryBookDTO extends BookDTO {
@@ -9,6 +10,7 @@ public class HistoryBookDTO extends BookDTO {
 
     public HistoryBookDTO() {}
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public HistoryBookDTO(String title, String author, int publicationYear, int totalCopies, String isbn,
                           String historicalPeriod, String regionFocus) {
         super(title, author, publicationYear, totalCopies, isbn);

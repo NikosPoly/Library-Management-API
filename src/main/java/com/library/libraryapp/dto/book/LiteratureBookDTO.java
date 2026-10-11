@@ -1,5 +1,6 @@
 package com.library.libraryapp.dto.book;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.NotBlank;
 
 public class LiteratureBookDTO extends BookDTO {
@@ -10,6 +11,7 @@ public class LiteratureBookDTO extends BookDTO {
 
     public LiteratureBookDTO() {}
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public LiteratureBookDTO(String title, String author, int publicationYear, int totalCopies,
                              String isbn, String genre, boolean forKids, String targetAudience) {
         super(title, author, publicationYear, totalCopies, isbn);

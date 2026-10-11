@@ -2,6 +2,7 @@ package com.library.libraryapp.model.book;
 
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,6 +28,7 @@ public class HistoryBook extends Book {
         return "History";
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public HistoryBook(String title, String author, int publicationYear, String isbn, int totalCopies,
                        String historicalPeriod, String regionFocus) {
         super(title, author, publicationYear, totalCopies, isbn);

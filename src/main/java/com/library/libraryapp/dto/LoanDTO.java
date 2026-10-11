@@ -1,5 +1,6 @@
 package com.library.libraryapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ public class LoanDTO {
 
     public LoanDTO() {}
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public LoanDTO(String bookId, String customerId, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate, boolean returned) {
         this.bookId = bookId;
         this.customerId = customerId;
@@ -65,7 +67,7 @@ public class LoanDTO {
     public Boolean isReturned() {
         return returned;
     }
-    public void setReturned(boolean returned) {
+    public void setReturned(Boolean returned) {
         this.returned = returned;
     }
 }

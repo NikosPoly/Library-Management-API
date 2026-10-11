@@ -1,6 +1,7 @@
 package com.library.libraryapp.model.book;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,6 +23,7 @@ public class LiteratureBook extends Book {
         super();
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public LiteratureBook(String title, String author, int publicationYear, int totalCopies, String isbn,
                           String genre, boolean forKids, String targetAudience) {
         super(title, author, publicationYear, totalCopies,isbn);

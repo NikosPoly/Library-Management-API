@@ -1,6 +1,6 @@
 package com.library.libraryapp.model.book;
 
-
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -14,22 +14,21 @@ public class ScienceBook extends Book {
     @NotBlank(message = "Field of study is required")
     private String fieldOfStudy; // e.g. Physics, Biology, Chemistry
 
-    private boolean isTextbook = false; // true if it is a textbook
+    private boolean textbook = false; // true if it is a textbook
 
     @Min(value = 1, message = "Edition number must be at least 1")
     private int editionNumber;
-
-
 
     public ScienceBook() {
         super();
     }
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public ScienceBook(String title, String author, int publicationYear, int totalCopies, String isbn,
-                       String fieldOfStudy, boolean isTextbook, int editionNumber) {
+                       String fieldOfStudy, boolean textbook, int editionNumber) {
         super(title, author, publicationYear, totalCopies, isbn);
         this.fieldOfStudy = fieldOfStudy;
-        this.isTextbook = isTextbook;
+        this.textbook = textbook;
         this.editionNumber = editionNumber;
     }
 
@@ -49,11 +48,11 @@ public class ScienceBook extends Book {
     }
 
     public boolean isTextbook() {
-        return isTextbook;
+        return textbook;
     }
 
-    public void setTextbook(boolean isTextbook) {
-        this.isTextbook = isTextbook;
+    public void setTextbook(boolean textbook) {
+        this.textbook = textbook;
     }
 
     public int getEditionNumber() {

@@ -1,5 +1,6 @@
 package com.library.libraryapp.dto.book;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
@@ -11,6 +12,7 @@ public class ScienceBookDTO extends BookDTO {
 
     public ScienceBookDTO() {}
 
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     public ScienceBookDTO(String title, String author, int publicationYear, int totalCopies, String isbn,
                           String fieldOfStudy, boolean isTextbook, int editionNumber) {
         super(title, author, publicationYear, totalCopies, isbn);
@@ -26,5 +28,5 @@ public class ScienceBookDTO extends BookDTO {
     public void setTextbook(Boolean isTextbook) { this.isTextbook = isTextbook; }
 
     public Integer getEditionNumber() { return editionNumber; }
-    public void setEditionNumber(int editionNumber) { this.editionNumber = editionNumber; }
+    public void setEditionNumber(Integer editionNumber) { this.editionNumber = editionNumber; }
 }
