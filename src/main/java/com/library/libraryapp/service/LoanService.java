@@ -15,12 +15,14 @@ import java.util.List;
 public class LoanService {
 
     private final LoanRepository loanRepository;
+    private final CustomerService customerService;
     private final BookService bookService;
 
     @Autowired
-    public LoanService(LoanRepository loanRepository, BookService bookService) {
+    public LoanService(LoanRepository loanRepository, BookService bookService, CustomerService customerService) {
         this.loanRepository = loanRepository;
         this.bookService = bookService;
+        this.customerService = customerService;
     }
 
     public List<Loan> getAllLoans() {
@@ -33,6 +35,7 @@ public class LoanService {
     }
 
     public Loan createLoan(Loan loan) {
+        customerService.getCustomerById(loan.getCustomerId());
         Book book = bookService.getBookById(loan.getBookId());
 
         if (book.getAvailableCopies() == 0) {
